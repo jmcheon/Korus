@@ -1,0 +1,74 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: korus-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: korus
+      MYSQL_USER: korus
+      MYSQL_PASSWORD: korus
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db-mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build:
+      context: ./back-fastapi
+    container_name: korus-backend
+    restart: unless-stopped
+    environment:
+      MYSQL_USER: korus
+      MYSQL_PASSWORD: korus
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: korus
+      SECRET_KEY: dev-secret-key-change-in-production
+      DEBUG: "True"
+    volumes:
+      - ./back-fastapi:/code
+      - uploads_data:/code/uploads
+    working_dir: /code
+    depends_on:
+      - db
+    command: >
+      sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./front-next
+    container_name: korus-frontend
+    restart: unless-stopped
+    env_file:
+      - ./.env.front.dev
+    volumes:
+      - ./front-next:/usr/src/app
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
+    command: "npm run dev -- --hostname 0.0.0.0 --port 3000"
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+  nginx:
+    build:
+      context: ./server-nginx
+    container_name: korus-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./server-nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - uploads_data:/var/www/uploads:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  db_data:
+  uploads_data:
