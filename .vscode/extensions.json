@@ -1,0 +1,26 @@
+{
+    "recommendations": [
+        // --- Python / Backend ---
+        "ms-python.python", // Python language support
+        "ms-python.black-formatter", // Black code formatter
+        "ms-python.debugpy", // Python debugging support
+
+        // --- Frontend / Next.js ---
+        "esbenp.prettier-vscode", // Prettier formatter for JS/TS/React
+        "dbaeumer.vscode-eslint", // ESLint integration
+
+        // --- Docker / DevOps ---
+        "ms-azuretools.vscode-docker", // Dockerfile, Compose, and container management
+
+        // --- Utilities ---
+        "editorconfig.editorconfig", // Respect .editorconfig if added later
+        "eamodio.gitlens", // Git blame, history, and insights
+        "streetsidesoftware.code-spell-checker", // Optional spell checker for docs/comments
+        "PKief.material-icon-theme" // Nice file icons (optional aesthetic)
+    ],
+
+    "unwantedRecommendations": [
+        "ms-python.vscode-pylance", // Optional — disable if using Ruff instead of Pylance
+        "ms-vscode.vscode-typescript-next" // Avoid conflicts with built-in TS server
+    ]
+}

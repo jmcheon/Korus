@@ -1,0 +1,31 @@
+name: Development Task
+description: Create a specific development task or sub-feature.
+title: "[Task]: "
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Task Overview**
+        Describe what needs to be implemented, fixed, or improved.
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Subtasks
+      description: List detailed steps or sub-items for this task.
+      placeholder: |
+        - [ ] Step 1
+        - [ ] Step 2
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Mention related issues or PRs that must be completed first.
+
+  - type: textarea
+    id: testing
+    attributes:
+      label: Testing Notes
+      description: Outline how this task should be tested or validated.
