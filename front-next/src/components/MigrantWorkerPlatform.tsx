@@ -664,6 +664,19 @@ export default function MigrantWorkerPlatform() {
     setReviewForm({
       companyId: '',
       companyName: '',
+      jobId: '',
+      jobTitle: '',
+      workConditions: 3,
+      pay: 3,
+      treatment: 3,
+      safety: 3,
+      comment: '',
+      isAnonymous: true,
+      paidRecruitmentFee: '',
+      recruitmentFeeAmount: '',
+      salaryLessThanPromised: '',
+      salaryDifference: '',
+      documentsConfiscated: ''
     });
     setCompanySearchQuery('');
     setJobSearchQuery('');
@@ -1519,7 +1532,7 @@ export default function MigrantWorkerPlatform() {
                 <CardHeader>
                   <CardTitle>Verify Your Review Token</CardTitle>
                   <CardDescription>
-                  Enter the review token provided by NGO partners or worker associations to begin
+                    Enter the review token provided by NGO partners or worker associations to begin
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -1548,13 +1561,13 @@ export default function MigrantWorkerPlatform() {
                     <div className="flex items-start gap-3">
                       <Shield className="w-5 h-5 text-primary mt-1" />
                       <div>
-                      <h4 className="font-semibold mb-1">About Review Tokens</h4>
-                      <ul className="text-sm text-muted-foreground space-y-1">
-                        <li>• Tokens are provided by NGO partners and worker associations</li>
-                        <li>• Each token can be used once to submit a review</li>
-                        <li>• Your identity remains anonymous even with token verification</li>
-                        <li>• Tokens help prevent fake reviews and ensure authenticity</li>
-                      </ul>
+                        <h4 className="font-semibold mb-1">About Review Tokens</h4>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          <li>• Tokens are provided by NGO partners and worker associations</li>
+                          <li>• Each token can be used once to submit a review</li>
+                          <li>• Your identity remains anonymous even with token verification</li>
+                          <li>• Tokens help prevent fake reviews and ensure authenticity</li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -2450,18 +2463,22 @@ export default function MigrantWorkerPlatform() {
                       {getTrustBadge(selectedCompany.trustScore)}
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-muted rounded-lg">
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 p-4 bg-muted rounded-lg">
                       <div className="text-center">
                         <p className="text-2xl font-bold text-primary">{selectedCompany.overallRating.toFixed(1)}</p>
                         <p className="text-xs text-muted-foreground">Overall Rating</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-primary">{selectedCompany.trustScore.toFixed(1)}</p>
+                        <p className="text-2xl font-bold text-green-600">{selectedCompany.trustScore.toFixed(1)}</p>
                         <p className="text-xs text-muted-foreground">Trust Score</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-primary">{selectedCompany.socialMediaScore.toFixed(1)}</p>
+                        <p className="text-2xl font-bold text-blue-600">{selectedCompany.socialMediaScore.toFixed(1)}</p>
                         <p className="text-xs text-muted-foreground">Social Media</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-2xl font-bold text-amber-600">{selectedCompany.externalPlatformScore.toFixed(1)}</p>
+                        <p className="text-xs text-muted-foreground">External Platforms</p>
                       </div>
                       <div className="text-center">
                         <p className="text-2xl font-bold text-primary">{selectedCompany.totalReviews}</p>
@@ -2475,22 +2492,52 @@ export default function MigrantWorkerPlatform() {
 
             {/* Data Insights */}
             <div className="grid lg:grid-cols-2 gap-6">
-              {/* Trust Score vs Social Media Score */}
+              {/* 3-Factor Score Comparison */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Trust Score vs Social Media Score</CardTitle>
-                  <CardDescription>Comparing internal reviews with external sentiment</CardDescription>
+                  <CardTitle>Multi-Source Rating Analysis</CardTitle>
+                  <CardDescription>Comparing internal trust score, social media sentiment, and external platform ratings</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
                     <LineChart
                       data={[
-                        { month: 'Jan', trust: selectedCompany.trustScore - 0.3, social: selectedCompany.socialMediaScore - 0.2 },
-                        { month: 'Feb', trust: selectedCompany.trustScore - 0.2, social: selectedCompany.socialMediaScore - 0.1 },
-                        { month: 'Mar', trust: selectedCompany.trustScore - 0.1, social: selectedCompany.socialMediaScore },
-                        { month: 'Apr', trust: selectedCompany.trustScore, social: selectedCompany.socialMediaScore + 0.1 },
-                        { month: 'May', trust: selectedCompany.trustScore + 0.1, social: selectedCompany.socialMediaScore + 0.2 },
-                        { month: 'Jun', trust: selectedCompany.trustScore, social: selectedCompany.socialMediaScore }
+                        {
+                          month: 'Jan',
+                          trust: selectedCompany.trustScore - 0.3,
+                          social: selectedCompany.socialMediaScore - 0.2,
+                          external: selectedCompany.externalPlatformScore - 0.2
+                        },
+                        {
+                          month: 'Feb',
+                          trust: selectedCompany.trustScore - 0.2,
+                          social: selectedCompany.socialMediaScore - 0.1,
+                          external: selectedCompany.externalPlatformScore - 0.1
+                        },
+                        {
+                          month: 'Mar',
+                          trust: selectedCompany.trustScore - 0.1,
+                          social: selectedCompany.socialMediaScore,
+                          external: selectedCompany.externalPlatformScore
+                        },
+                        {
+                          month: 'Apr',
+                          trust: selectedCompany.trustScore,
+                          social: selectedCompany.socialMediaScore + 0.1,
+                          external: selectedCompany.externalPlatformScore + 0.1
+                        },
+                        {
+                          month: 'May',
+                          trust: selectedCompany.trustScore + 0.1,
+                          social: selectedCompany.socialMediaScore + 0.2,
+                          external: selectedCompany.externalPlatformScore + 0.15
+                        },
+                        {
+                          month: 'Jun',
+                          trust: selectedCompany.trustScore,
+                          social: selectedCompany.socialMediaScore,
+                          external: selectedCompany.externalPlatformScore
+                        }
                       ]}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
@@ -2500,6 +2547,7 @@ export default function MigrantWorkerPlatform() {
                       <Legend />
                       <Line type="monotone" dataKey="trust" stroke="#22c55e" name="Trust Score" strokeWidth={2} />
                       <Line type="monotone" dataKey="social" stroke="#3b82f6" name="Social Media" strokeWidth={2} />
+                      <Line type="monotone" dataKey="external" stroke="#f59e0b" name="External Platforms" strokeWidth={2} />
                     </LineChart>
                   </ResponsiveContainer>
                 </CardContent>
