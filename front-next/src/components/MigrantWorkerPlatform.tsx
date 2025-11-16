@@ -98,9 +98,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 1.8,
     totalReviews: 234,
-    socialMediaScore: 2.1,
-    trustScore: 1.9,
-    externalPlatformScore: 2.3, // Glassdoor/Indeed score
+    socialMediaScore: 2.8,
+    trustScore: 1.5,
+    externalPlatformScore: 3.4, // Much higher - legal employees have better experience
     verified: false,
     ratings: { workConditions: 1.5, pay: 2.0, treatment: 1.8, safety: 2.0 },
     coordinates: { lat: 48.8566, lng: 2.3522 }
@@ -113,9 +113,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 2.1,
     totalReviews: 187,
-    socialMediaScore: 2.3,
-    trustScore: 2.2,
-    externalPlatformScore: 2.5,
+    socialMediaScore: 3.1,
+    trustScore: 1.9,
+    externalPlatformScore: 3.6,
     verified: false,
     ratings: { workConditions: 2.0, pay: 1.8, treatment: 2.3, safety: 2.3 },
     coordinates: { lat: 45.7640, lng: 4.8357 }
@@ -128,9 +128,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 1.9,
     totalReviews: 156,
-    socialMediaScore: 1.7,
-    trustScore: 1.8,
-    externalPlatformScore: 2.0,
+    socialMediaScore: 2.4,
+    trustScore: 1.6,
+    externalPlatformScore: 3.2,
     verified: false,
     ratings: { workConditions: 1.6, pay: 2.1, treatment: 1.9, safety: 2.0 },
     coordinates: { lat: 43.9493, lng: 4.8055 }
@@ -143,9 +143,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 2.4,
     totalReviews: 203,
-    socialMediaScore: 3.2,
-    trustScore: 2.5,
-    externalPlatformScore: 2.8,
+    socialMediaScore: 3.5,
+    trustScore: 2.2,
+    externalPlatformScore: 3.8,
     verified: true,
     ratings: { workConditions: 2.3, pay: 2.2, treatment: 2.6, safety: 2.5 },
     coordinates: { lat: 43.7102, lng: 7.2620 }
@@ -158,9 +158,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 2.6,
     totalReviews: 178,
-    socialMediaScore: 2.8,
-    trustScore: 2.7,
-    externalPlatformScore: 2.9,
+    socialMediaScore: 3.2,
+    trustScore: 2.4,
+    externalPlatformScore: 3.7,
     verified: false,
     ratings: { workConditions: 2.5, pay: 2.8, treatment: 2.6, safety: 2.5 },
     coordinates: { lat: 43.2965, lng: 5.3698 }
@@ -173,9 +173,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 2.3,
     totalReviews: 312,
-    socialMediaScore: 2.9,
-    trustScore: 2.4,
-    externalPlatformScore: 2.7,
+    socialMediaScore: 3.3,
+    trustScore: 2.1,
+    externalPlatformScore: 3.5,
     verified: true,
     ratings: { workConditions: 2.1, pay: 2.3, treatment: 2.5, safety: 2.4 },
     coordinates: { lat: 48.8566, lng: 2.3522 }
@@ -188,9 +188,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 2.8,
     totalReviews: 145,
-    socialMediaScore: 2.6,
-    trustScore: 2.7,
-    externalPlatformScore: 3.0,
+    socialMediaScore: 3.1,
+    trustScore: 2.6,
+    externalPlatformScore: 3.6,
     verified: false,
     ratings: { workConditions: 2.7, pay: 2.9, treatment: 2.8, safety: 2.8 },
     coordinates: { lat: 50.6292, lng: 3.0573 }
@@ -203,9 +203,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 3.4,
     totalReviews: 198,
-    socialMediaScore: 3.6,
-    trustScore: 3.5,
-    externalPlatformScore: 3.7,
+    socialMediaScore: 3.8,
+    trustScore: 3.3,
+    externalPlatformScore: 4.1,
     verified: true,
     ratings: { workConditions: 3.3, pay: 3.4, treatment: 3.6, safety: 3.4 },
     coordinates: { lat: 44.8378, lng: -0.5792 }
@@ -218,9 +218,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 2.2,
     totalReviews: 167,
-    socialMediaScore: 2.4,
-    trustScore: 2.3,
-    externalPlatformScore: 2.6,
+    socialMediaScore: 3.0,
+    trustScore: 2.0,
+    externalPlatformScore: 3.4,
     verified: false,
     ratings: { workConditions: 2.0, pay: 2.3, treatment: 2.3, safety: 2.2 },
     coordinates: { lat: 43.6047, lng: 1.4442 }
@@ -233,9 +233,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 2.5,
     totalReviews: 134,
-    socialMediaScore: 2.7,
-    trustScore: 2.6,
-    externalPlatformScore: 2.8,
+    socialMediaScore: 3.1,
+    trustScore: 2.3,
+    externalPlatformScore: 3.5,
     verified: false,
     ratings: { workConditions: 2.4, pay: 2.6, treatment: 2.5, safety: 2.5 },
     coordinates: { lat: 48.5734, lng: 7.7521 }
@@ -248,9 +248,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 4.2,
     totalReviews: 156,
-    socialMediaScore: 4.1,
-    trustScore: 4.3,
-    externalPlatformScore: 4.4,
+    socialMediaScore: 4.3,
+    trustScore: 4.1,
+    externalPlatformScore: 4.5,
     verified: true,
     ratings: { workConditions: 4.3, pay: 4.2, treatment: 4.1, safety: 4.2 },
     coordinates: { lat: 48.8566, lng: 2.3522 }
@@ -263,9 +263,9 @@ const sampleCompanies: Company[] = [
     country: 'France',
     overallRating: 2.7,
     totalReviews: 189,
-    socialMediaScore: 2.9,
-    trustScore: 2.8,
-    externalPlatformScore: 3.1,
+    socialMediaScore: 3.3,
+    trustScore: 2.5,
+    externalPlatformScore: 3.7,
     verified: true,
     ratings: { workConditions: 2.6, pay: 2.8, treatment: 2.7, safety: 2.7 },
     coordinates: { lat: 45.7640, lng: 4.8357 }
@@ -2067,9 +2067,19 @@ export default function MigrantWorkerPlatform() {
                         dataKey="value"
                         label
                       >
-                        {Array.from(new Set(companies.map(c => c.industry))).map((_, index) => (
-                          <Cell key={`cell-${index}`} fill={`hsl(var(--primary) / ${0.5 + (index * 0.15)})`} />
-                        ))}
+                        {Array.from(new Set(companies.map(c => c.industry))).map((_, index) => {
+                          const industryColors = [
+                            '#ef4444', // red
+                            '#f59e0b', // amber
+                            '#10b981', // emerald
+                            '#3b82f6', // blue
+                            '#8b5cf6', // violet
+                            '#ec4899', // pink
+                            '#06b6d4', // cyan
+                            '#f97316', // orange
+                          ];
+                          return <Cell key={`cell-${index}`} fill={industryColors[index % industryColors.length]} />;
+                        })}
                       </Pie>
                       <Tooltip />
                     </PieChart>
@@ -2588,17 +2598,26 @@ export default function MigrantWorkerPlatform() {
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart
                       data={[
-                        { category: 'Work Conditions', score: selectedCompany.ratings.workConditions },
-                        { category: 'Fair Pay', score: selectedCompany.ratings.pay },
-                        { category: 'Treatment', score: selectedCompany.ratings.treatment },
-                        { category: 'Safety', score: selectedCompany.ratings.safety }
+                        { category: 'Work Conditions', score: selectedCompany.ratings.workConditions, fill: '#ef4444' },
+                        { category: 'Fair Pay', score: selectedCompany.ratings.pay, fill: '#f59e0b' },
+                        { category: 'Treatment', score: selectedCompany.ratings.treatment, fill: '#3b82f6' },
+                        { category: 'Safety', score: selectedCompany.ratings.safety, fill: '#22c55e' }
                       ]}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="category" />
                       <YAxis domain={[0, 5]} />
                       <Tooltip />
-                      <Bar dataKey="score" fill="hsl(var(--primary))" />
+                      <Bar dataKey="score">
+                        {[
+                          { category: 'Work Conditions', score: selectedCompany.ratings.workConditions, fill: '#ef4444' },
+                          { category: 'Fair Pay', score: selectedCompany.ratings.pay, fill: '#f59e0b' },
+                          { category: 'Treatment', score: selectedCompany.ratings.treatment, fill: '#3b82f6' },
+                          { category: 'Safety', score: selectedCompany.ratings.safety, fill: '#22c55e' }
+                        ].map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.fill} />
+                        ))}
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </CardContent>
