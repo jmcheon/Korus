@@ -1,0 +1,25 @@
+# Frontend-specific directories (relative to project root)
+node_modules
+.next
+out
+dist
+
+# Environment files
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific junk
+.DS_Store
+Thumbs.db
+
+# Editor and config
+.vscode
+.idea
+
+# Docker files themselves
+Dockerfile*
