@@ -2013,7 +2013,7 @@ export default function MigrantWorkerPlatform() {
                       <XAxis dataKey="name" />
                       <YAxis domain={[0, 5]} />
                       <Tooltip />
-                      <Bar dataKey="rating" fill="hsl(var(--primary))" />
+                      <Bar dataKey="rating" fill="#3b82f6" />
                     </BarChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -2021,8 +2021,8 @@ export default function MigrantWorkerPlatform() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Trust Score vs Social Media Score</CardTitle>
-                  <CardDescription>Comparing internal and external ratings</CardDescription>
+                  <CardTitle>Three-Factor Score Comparison</CardTitle>
+                  <CardDescription>Trust Score vs Social Media vs External Platforms</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
@@ -2030,7 +2030,8 @@ export default function MigrantWorkerPlatform() {
                       data={companies.map(c => ({
                         name: c.name.split(' ')[0],
                         trust: c.trustScore,
-                        social: c.socialMediaScore
+                        social: c.socialMediaScore,
+                        external: c.externalPlatformScore
                       }))}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
@@ -2038,8 +2039,9 @@ export default function MigrantWorkerPlatform() {
                       <YAxis domain={[0, 5]} />
                       <Tooltip />
                       <Legend />
-                      <Line type="monotone" dataKey="trust" stroke="hsl(var(--primary))" name="Trust Score" />
-                      <Line type="monotone" dataKey="social" stroke="hsl(var(--accent))" name="Social Media" />
+                      <Line type="monotone" dataKey="trust" stroke="#22c55e" name="Trust Score" strokeWidth={2} />
+                      <Line type="monotone" dataKey="social" stroke="#3b82f6" name="Social Media" strokeWidth={2} />
+                      <Line type="monotone" dataKey="external" stroke="#f59e0b" name="External Platforms" strokeWidth={2} />
                     </LineChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -2106,7 +2108,7 @@ export default function MigrantWorkerPlatform() {
                       <XAxis dataKey="category" />
                       <YAxis domain={[0, 5]} />
                       <Tooltip />
-                      <Bar dataKey="score" fill="hsl(var(--secondary))" />
+                      <Bar dataKey="score" fill="#8b5cf6" />
                     </BarChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -2485,6 +2487,29 @@ export default function MigrantWorkerPlatform() {
                         <p className="text-xs text-muted-foreground">Reviews</p>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Explanation Card */}
+            <Card className="border-blue-200 bg-blue-50">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold mb-2 text-blue-900">Understanding Score Differences</h3>
+                    <p className="text-sm text-blue-800 mb-3">
+                      You may notice gaps between the three rating sources. This is expected and provides valuable insights:
+                    </p>
+                    <ul className="text-sm text-blue-800 space-y-2">
+                      <li>• <span className="font-semibold text-green-700">Trust Score</span> - Based on reviews from migrant and undocumented workers who may face different working conditions, lower pay, and less legal protection than regular employees</li>
+                      <li>• <span className="font-semibold text-blue-700">Social Media</span> - Public sentiment that may not capture the full experience of vulnerable workers</li>
+                      <li>• <span className="font-semibold text-amber-700">External Platforms</span> - Reviews from legal employees on platforms like Glassdoor/Indeed, who typically have better working conditions and legal protections</li>
+                    </ul>
+                    <p className="text-sm text-blue-800 mt-3 font-medium">
+                      Large gaps often indicate that migrant workers experience significantly worse conditions than legal employees at the same company.
+                    </p>
                   </div>
                 </div>
               </CardContent>
