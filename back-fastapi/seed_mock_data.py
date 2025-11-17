@@ -1,4 +1,3 @@
-import json
 
 from auth import get_password_hash
 from database import SQLALCHEMY_DATABASE_URL
@@ -474,14 +473,14 @@ def seed_mock_data():
                 "address": "15 Rue de la République, 75001 Paris, France",
                 "contact": "+33 1 42 60 00 00",
                 "email": "aide@travailleurs-migrants.fr",
-                "services": json.dumps(
+                "services":
                     [
                         "Consultation juridique",
                         "Révision de contrats",
                         "Résolution de litiges",
                         "Éducation aux droits",
                     ]
-                ),
+                ,
                 "open_hours": "Lun-Ven: 9h-18h",
                 "description": "Assistance juridique pour les travailleurs migrants en France",
                 "website": "https://travailleurs-migrants.fr",
@@ -494,14 +493,14 @@ def seed_mock_data():
                 "address": "25 Avenue Jean Jaurès, 69007 Lyon, France",
                 "contact": "+33 4 78 60 00 00",
                 "email": "contact@medecins-travail-lyon.fr",
-                "services": json.dumps(
+                "services": 
                     [
                         "Examens médicaux gratuits",
                         "Soutien en santé mentale",
                         "Santé au travail",
                         "Soins d'urgence",
                     ]
-                ),
+                ,
                 "open_hours": "Lun-Sam: 8h-20h",
                 "description": "Services de santé pour les travailleurs",
                 "website": "https://medecins-travail-lyon.fr",
@@ -514,14 +513,14 @@ def seed_mock_data():
                 "address": "10 Boulevard de la Libération, 13001 Marseille, France",
                 "contact": "+33 4 91 50 00 00",
                 "email": "contact@logement-solidaire.fr",
-                "services": json.dumps(
+                "services": 
                     [
                         "Hébergement d'urgence",
                         "Aide au logement",
                         "Logement temporaire",
                         "Défense des droits au logement",
                     ]
-                ),
+                ,
                 "open_hours": "24/7 Ligne d'urgence",
                 "description": "Assistance au logement pour les travailleurs",
                 "website": "https://logement-solidaire.fr",
@@ -534,14 +533,14 @@ def seed_mock_data():
                 "address": "50 Rue du Faubourg Saint-Antoine, 75012 Paris, France",
                 "contact": "+33 1 43 40 00 00",
                 "email": "contact@syndicat-travailleurs.fr",
-                "services": json.dumps(
+                "services": 
                     [
                         "Représentation syndicale",
                         "Résolution de litiges salariaux",
                         "Inspections de sécurité",
                         "Soutien aux négociations collectives",
                     ]
-                ),
+                ,
                 "open_hours": "Lun-Ven: 9h-19h, Sam: 10h-14h",
                 "description": "Protection des droits des travailleurs en France",
                 "website": "https://syndicat-travailleurs.fr",
@@ -554,14 +553,14 @@ def seed_mock_data():
                 "address": "30 Allée Jean Jaurès, 31000 Toulouse, France",
                 "contact": "+33 5 61 20 00 00",
                 "email": "info@solidarite-migrants.org",
-                "services": json.dumps(
+                "services": 
                     [
                         "Défense des travailleurs",
                         "Normes de travail équitables",
                         "Programmes de formation",
                         "Assistance d'urgence",
                     ]
-                ),
+                ,
                 "open_hours": "Lun-Ven: 8h-17h",
                 "description": "Organisation mondiale promouvant les droits des travailleurs",
                 "website": "https://solidarite-migrants.org",

@@ -8,6 +8,13 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import {
+  fetchCompanies,
+  fetchJobs,
+  fetchReviews,
+  fetchSupportOrganizations,
+  fetchPlatformStatistics,
+} from "../lib/api";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -87,376 +94,144 @@ interface SupportOrg {
   openHours: string;
   distance?: number;
 }
+// What the backend returns for a company
+interface ApiCompany {
+  id: number;
+  company_name: string;
+  industry: string;
+  location: string;
+  country: string;
+  description: string | null;
+  website: string | null;
+  overall_rating: number;
+  total_reviews: number;
+  social_media_score: number;
+  trust_score: number;
+  external_platform_score: number;
+  verified: boolean;
+  rating_work_conditions: number;
+  rating_pay: number;
+  rating_treatment: number;
+  rating_safety: number;
+  latitude: number | null;
+  longitude: number | null;
+}
 
-// Sample Data - Focus on French companies with various trust levels
-const sampleCompanies: Company[] = [
-  {
-    id: '1',
-    name: 'BTP Services Paris',
-    industry: 'Construction',
-    location: 'Paris, France',
-    country: 'France',
-    overallRating: 1.8,
-    totalReviews: 234,
-    socialMediaScore: 2.8,
-    trustScore: 1.5,
-    externalPlatformScore: 3.4, // Much higher - legal employees have better experience
-    verified: false,
-    ratings: { workConditions: 1.5, pay: 2.0, treatment: 1.8, safety: 2.0 },
-    coordinates: { lat: 48.8566, lng: 2.3522 }
-  },
-  {
-    id: '2',
-    name: 'Nettoyage Express Lyon',
-    industry: 'Cleaning Services',
-    location: 'Lyon, France',
-    country: 'France',
-    overallRating: 2.1,
-    totalReviews: 187,
-    socialMediaScore: 3.1,
-    trustScore: 1.9,
-    externalPlatformScore: 3.6,
-    verified: false,
-    ratings: { workConditions: 2.0, pay: 1.8, treatment: 2.3, safety: 2.3 },
-    coordinates: { lat: 45.7640, lng: 4.8357 }
-  },
-  {
-    id: '3',
-    name: 'Agro-Travail Provence',
-    industry: 'Agriculture',
-    location: 'Avignon, France',
-    country: 'France',
-    overallRating: 1.9,
-    totalReviews: 156,
-    socialMediaScore: 2.4,
-    trustScore: 1.6,
-    externalPlatformScore: 3.2,
-    verified: false,
-    ratings: { workConditions: 1.6, pay: 2.1, treatment: 1.9, safety: 2.0 },
-    coordinates: { lat: 43.9493, lng: 4.8055 }
-  },
-  {
-    id: '4',
-    name: 'Hôtel Services Côte d\'Azur',
-    industry: 'Hospitality',
-    location: 'Nice, France',
-    country: 'France',
-    overallRating: 2.4,
-    totalReviews: 203,
-    socialMediaScore: 3.5,
-    trustScore: 2.2,
-    externalPlatformScore: 3.8,
-    verified: true,
-    ratings: { workConditions: 2.3, pay: 2.2, treatment: 2.6, safety: 2.5 },
-    coordinates: { lat: 43.7102, lng: 7.2620 }
-  },
-  {
-    id: '5',
-    name: 'Logistique Marseille Port',
-    industry: 'Logistics',
-    location: 'Marseille, France',
-    country: 'France',
-    overallRating: 2.6,
-    totalReviews: 178,
-    socialMediaScore: 3.2,
-    trustScore: 2.4,
-    externalPlatformScore: 3.7,
-    verified: false,
-    ratings: { workConditions: 2.5, pay: 2.8, treatment: 2.6, safety: 2.5 },
-    coordinates: { lat: 43.2965, lng: 5.3698 }
-  },
-  {
-    id: '6',
-    name: 'Restauration Rapide Paris',
-    industry: 'Food Service',
-    location: 'Paris, France',
-    country: 'France',
-    overallRating: 2.3,
-    totalReviews: 312,
-    socialMediaScore: 3.3,
-    trustScore: 2.1,
-    externalPlatformScore: 3.5,
-    verified: true,
-    ratings: { workConditions: 2.1, pay: 2.3, treatment: 2.5, safety: 2.4 },
-    coordinates: { lat: 48.8566, lng: 2.3522 }
-  },
-  {
-    id: '7',
-    name: 'Textile Industrie Lille',
-    industry: 'Manufacturing',
-    location: 'Lille, France',
-    country: 'France',
-    overallRating: 2.8,
-    totalReviews: 145,
-    socialMediaScore: 3.1,
-    trustScore: 2.6,
-    externalPlatformScore: 3.6,
-    verified: false,
-    ratings: { workConditions: 2.7, pay: 2.9, treatment: 2.8, safety: 2.8 },
-    coordinates: { lat: 50.6292, lng: 3.0573 }
-  },
-  {
-    id: '8',
-    name: 'Soins à Domicile Bordeaux',
-    industry: 'Healthcare',
-    location: 'Bordeaux, France',
-    country: 'France',
-    overallRating: 3.4,
-    totalReviews: 198,
-    socialMediaScore: 3.8,
-    trustScore: 3.3,
-    externalPlatformScore: 4.1,
-    verified: true,
-    ratings: { workConditions: 3.3, pay: 3.4, treatment: 3.6, safety: 3.4 },
-    coordinates: { lat: 44.8378, lng: -0.5792 }
-  },
-  {
-    id: '9',
-    name: 'Entretien Ménager Toulouse',
-    industry: 'Cleaning Services',
-    location: 'Toulouse, France',
-    country: 'France',
-    overallRating: 2.2,
-    totalReviews: 167,
-    socialMediaScore: 3.0,
-    trustScore: 2.0,
-    externalPlatformScore: 3.4,
-    verified: false,
-    ratings: { workConditions: 2.0, pay: 2.3, treatment: 2.3, safety: 2.2 },
-    coordinates: { lat: 43.6047, lng: 1.4442 }
-  },
-  {
-    id: '10',
-    name: 'Bâtiment Rénovation Strasbourg',
-    industry: 'Construction',
-    location: 'Strasbourg, France',
-    country: 'France',
-    overallRating: 2.5,
-    totalReviews: 134,
-    socialMediaScore: 3.1,
-    trustScore: 2.3,
-    externalPlatformScore: 3.5,
-    verified: false,
-    ratings: { workConditions: 2.4, pay: 2.6, treatment: 2.5, safety: 2.5 },
-    coordinates: { lat: 48.5734, lng: 7.7521 }
-  },
-  {
-    id: '11',
-    name: 'Tech Innovation Paris',
-    industry: 'Technology',
-    location: 'Paris, France',
-    country: 'France',
-    overallRating: 4.2,
-    totalReviews: 156,
-    socialMediaScore: 4.3,
-    trustScore: 4.1,
-    externalPlatformScore: 4.5,
-    verified: true,
-    ratings: { workConditions: 4.3, pay: 4.2, treatment: 4.1, safety: 4.2 },
-    coordinates: { lat: 48.8566, lng: 2.3522 }
-  },
-  {
-    id: '12',
-    name: 'Sécurité Privée Lyon',
-    industry: 'Security Services',
-    location: 'Lyon, France',
-    country: 'France',
-    overallRating: 2.7,
-    totalReviews: 189,
-    socialMediaScore: 3.3,
-    trustScore: 2.5,
-    externalPlatformScore: 3.7,
-    verified: true,
-    ratings: { workConditions: 2.6, pay: 2.8, treatment: 2.7, safety: 2.7 },
-    coordinates: { lat: 45.7640, lng: 4.8357 }
-  }
-];
+// What the backend returns for a job
+interface ApiJob {
+  id: number;
+  company_id: number;
+  title: string;
+  description: string;
+  location: string;
+  salary: string;
+  posted_at: string; // ISO date string from backend (or created_at → adjust here)
+}
 
-const sampleJobs: Job[] = [
-  {
-    id: '1',
-    companyId: '1',
-    title: 'Ouvrier de Chantier',
-    description: 'Travaux de construction générale incluant manutention lourde, échafaudage et préparation de site.',
-    location: 'Paris, France',
-    salary: '€1,400-1,600/mois',
-    posted: '2024-01-15'
-  },
-  {
-    id: '2',
-    companyId: '2',
-    title: 'Agent de Nettoyage',
-    description: 'Nettoyage de bureaux et espaces commerciaux. Horaires de nuit possibles.',
-    location: 'Lyon, France',
-    salary: '€1,300-1,450/mois',
-    posted: '2024-01-20'
-  },
-  {
-    id: '3',
-    companyId: '3',
-    title: 'Travailleur Agricole Saisonnier',
-    description: 'Récolte de fruits et légumes. Travail saisonnier de mars à octobre.',
-    location: 'Avignon, France',
-    salary: '€1,200-1,400/mois',
-    posted: '2024-02-01'
-  },
-  {
-    id: '4',
-    companyId: '4',
-    title: 'Femme de Chambre',
-    description: 'Entretien des chambres d\'hôtel. Travail le week-end requis.',
-    location: 'Nice, France',
-    salary: '€1,350-1,500/mois',
-    posted: '2024-01-25'
-  },
-  {
-    id: '5',
-    companyId: '6',
-    title: 'Équipier Polyvalent',
-    description: 'Service en salle et préparation. Horaires flexibles.',
-    location: 'Paris, France',
-    salary: '€1,400-1,550/mois',
-    posted: '2024-02-05'
-  }
-];
+// What the backend returns for a review
+interface ApiReview {
+  id: number;
+  company_id: number;
+  job_id: number | null;
+  rating_work_conditions: number;
+  rating_pay: number;
+  rating_treatment: number;
+  rating_safety: number;
+  comment: string;
+  is_anonymous: boolean;
+  verified_employee: boolean;
+  created_at: string;  // ISO date
+  helpful_count: number;
+}
 
-const sampleReviews: Review[] = [
-  {
-    id: '1',
-    companyId: '1',
-    jobId: '1',
-    ratings: { workConditions: 1.5, pay: 2.0, treatment: 1.8, safety: 2.0 },
-    comment: 'Horaires très longs sans pauses suffisantes. Équipement de sécurité rarement fourni. Salaires payés en retard plusieurs fois. Pas de contrat écrit clair.',
-    isAnonymous: true,
-    verifiedEmployee: true,
-    date: '2024-01-10',
-    helpful: 34
-  },
-  {
-    id: '2',
-    companyId: '1',
-    jobId: '1',
-    ratings: { workConditions: 1.5, pay: 2.0, treatment: 1.8, safety: 2.0 },
-    comment: 'Conditions de travail dangereuses. Le patron ne respecte pas le droit du travail. Heures supplémentaires non payées.',
-    isAnonymous: true,
-    verifiedEmployee: true,
-    date: '2024-01-15',
-    helpful: 28
-  },
-  {
-    id: '3',
-    companyId: '2',
-    jobId: '2',
-    ratings: { workConditions: 2.0, pay: 1.8, treatment: 2.3, safety: 2.3 },
-    comment: 'Salaire minimum malgré beaucoup de travail. Produits chimiques sans formation adéquate. Pas de pause déjeuner respectée.',
-    isAnonymous: true,
-    verifiedEmployee: true,
-    date: '2024-01-18',
-    helpful: 19
-  },
-  {
-    id: '4',
-    companyId: '3',
-    jobId: '3',
-    ratings: { workConditions: 1.6, pay: 2.1, treatment: 1.9, safety: 2.0 },
-    comment: 'Travail sous le soleil sans eau suffisante. Logement insalubre. Pas de jours de repos. Menaces si on se plaint.',
-    isAnonymous: true,
-    verifiedEmployee: true,
-    date: '2024-02-02',
-    helpful: 42
-  },
-  {
-    id: '5',
-    companyId: '4',
-    jobId: '4',
-    ratings: { workConditions: 2.3, pay: 2.2, treatment: 2.6, safety: 2.5 },
-    comment: 'Beaucoup de chambres à nettoyer en peu de temps. Salaire correct mais horaires épuisants. Management parfois irrespectueux.',
-    isAnonymous: true,
-    verifiedEmployee: true,
-    date: '2024-01-28',
-    helpful: 15
-  },
-  {
-    id: '6',
-    companyId: '6',
-    jobId: '5',
-    ratings: { workConditions: 2.1, pay: 2.3, treatment: 2.5, safety: 2.4 },
-    comment: 'Rythme de travail très intense. Pas assez de personnel. Pauses souvent annulées. Ambiance stressante.',
-    isAnonymous: true,
-    verifiedEmployee: true,
-    date: '2024-02-08',
-    helpful: 22
-  },
-  {
-    id: '7',
-    companyId: '11',
-    jobId: '',
-    ratings: { workConditions: 4.3, pay: 4.2, treatment: 4.1, safety: 4.2 },
-    comment: 'Excellente entreprise. Respect du code du travail. Bonne ambiance. Salaire juste et payé à temps. Je recommande.',
-    isAnonymous: false,
-    verifiedEmployee: true,
-    date: '2024-02-10',
-    helpful: 56
-  }
-];
+// What the backend returns for support orgs
+interface ApiSupportOrg {
+  id: number;
+  name: string;
+  org_type: 'NGO' | 'Legal Aid' | 'Healthcare' | 'Housing' | 'Labor Rights' | string;
+  latitude: number;
+  longitude: number;
+  address: string;
+  contact: string;
+  email: string;
+  services: string[];
+  open_hours: string;
+}
 
-const supportOrganizations: SupportOrg[] = [
-  {
-    id: '1',
-    name: 'Migrant Workers Rights Center',
-    type: 'Legal Aid',
-    location: { lat: 25.2048, lng: 55.2708 },
-    address: '123 Sheikh Zayed Road, Dubai, UAE',
-    contact: '+971-4-123-4567',
-    email: 'help@mwrc.ae',
-    services: ['Legal consultation', 'Contract review', 'Dispute resolution', 'Rights education'],
-    openHours: 'Mon-Fri: 9AM-6PM'
-  },
-  {
-    id: '2',
-    name: 'International Labor Organization',
-    type: 'NGO',
-    location: { lat: 37.7749, lng: -122.4194 },
-    address: '456 Market Street, San Francisco, CA',
-    contact: '+1-415-555-0123',
-    email: 'support@ilo-usa.org',
-    services: ['Worker advocacy', 'Fair labor standards', 'Training programs', 'Emergency assistance'],
-    openHours: 'Mon-Fri: 8AM-5PM'
-  },
-  {
-    id: '3',
-    name: 'Migrants Healthcare Clinic',
-    type: 'Healthcare',
-    location: { lat: 37.9838, lng: 23.7275 },
-    address: '789 Piraeus Street, Athens, Greece',
-    contact: '+30-21-0987-6543',
-    email: 'clinic@migrants-health.gr',
-    services: ['Free medical checkups', 'Mental health support', 'Occupational health', 'Emergency care'],
-    openHours: 'Mon-Sat: 7AM-9PM'
-  },
-  {
-    id: '4',
-    name: 'Safe Housing Initiative',
-    type: 'Housing',
-    location: { lat: 1.3521, lng: 103.8198 },
-    address: '321 Orchard Road, Singapore',
-    contact: '+65-6123-4567',
-    email: 'housing@safe-initiative.sg',
-    services: ['Emergency shelter', 'Housing assistance', 'Temporary accommodation', 'Housing rights advocacy'],
-    openHours: '24/7 Emergency Hotline'
-  },
-  {
-    id: '5',
-    name: 'Workers United Federation',
-    type: 'Labor Rights',
-    location: { lat: 52.5200, lng: 13.4050 },
-    address: '567 Alexanderplatz, Berlin, Germany',
-    contact: '+49-30-9876-5432',
-    email: 'contact@workers-united.de',
-    services: ['Union representation', 'Wage dispute resolution', 'Workplace safety inspections', 'Collective bargaining support'],
-    openHours: 'Mon-Fri: 9AM-7PM, Sat: 10AM-2PM'
-  }
-];
+function mapCompanyFromApi(api: ApiCompany): Company {
+  return {
+    id: String(api.id),
+    name: api.company_name,
+    industry: api.industry,
+    location: api.location,
+    country: api.country,
+    overallRating: api.overall_rating,
+    totalReviews: api.total_reviews,
+    socialMediaScore: api.social_media_score,
+    trustScore: api.trust_score,
+    externalPlatformScore: api.external_platform_score,
+    verified: api.verified,
+    ratings: {
+      workConditions: api.rating_work_conditions,
+      pay: api.rating_pay,
+      treatment: api.rating_treatment,
+      safety: api.rating_safety,
+    },
+    coordinates:
+      api.latitude != null && api.longitude != null
+        ? { lat: api.latitude, lng: api.longitude }
+        : undefined,
+  };
+}
+
+function mapJobFromApi(api: ApiJob): Job {
+  return {
+    id: String(api.id),
+    companyId: String(api.company_id),
+    title: api.title,
+    description: api.description,
+    location: api.location,
+    salary: api.salary,
+    posted: api.posted_at,
+  };
+}
+
+function mapReviewFromApi(api: ApiReview): Review {
+  return {
+    id: String(api.id),
+    companyId: String(api.company_id),
+    jobId: api.job_id != null ? String(api.job_id) : '',
+    ratings: {
+      workConditions: api.rating_work_conditions,
+      pay: api.rating_pay,
+      treatment: api.rating_treatment,
+      safety: api.rating_safety,
+    },
+    comment: api.comment,
+    isAnonymous: api.is_anonymous,
+    verifiedEmployee: api.verified_employee,
+    date: api.created_at,
+    helpful: api.helpful_count,
+  };
+}
+
+function mapSupportOrgFromApi(api: ApiSupportOrg): SupportOrg {
+  return {
+    id: String(api.id),
+    name: api.name,
+    // Narrow org_type to your union if possible, otherwise cast with a fallback:
+    type: (api.org_type as SupportOrg['type']) ?? 'NGO',
+    location: {
+      lat: api.latitude,
+      lng: api.longitude,
+    },
+    address: api.address,
+    contact: api.contact,
+    email: api.email,
+    services: api.services,
+    openHours: api.open_hours,
+  };
+}
 
 export default function MigrantWorkerPlatform() {
   // Authentication State
@@ -467,10 +242,71 @@ export default function MigrantWorkerPlatform() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Data State
-  const [companies, setCompanies] = useState<Company[]>(sampleCompanies);
-  const [jobs, setJobs] = useState<Job[]>(sampleJobs);
-  const [reviews, setReviews] = useState<Review[]>(sampleReviews);
-  const [supportOrgs, setSupportOrgs] = useState<SupportOrg[]>(supportOrganizations);
+// Data State
+const [companies, setCompanies] = useState<Company[]>([]);
+const [jobs, setJobs] = useState<Job[]>([]);
+const [reviews, setReviews] = useState<Review[]>([]);
+const [supportOrgs, setSupportOrgs] = useState<SupportOrg[]>([]);
+const [isLoading, setIsLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
+
+useEffect(() => {
+  const loadData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const [
+        companiesData,
+        jobsData,
+        reviewsData,
+        supportOrgsRaw,
+        stats,
+      ] = await Promise.all([
+        fetchCompanies(),
+        fetchJobs(),               // all jobs
+        fetchReviews(),            // all reviews
+        fetchSupportOrganizations(),
+        fetchPlatformStatistics(), // if you want global stats later
+      ]);
+
+      // fetchCompanies / fetchJobs / fetchReviews already return frontend-shaped objects
+      setCompanies(companiesData as any);
+      setJobs(jobsData as any);
+      setReviews(reviewsData as any);
+
+      // SupportOrg needs a tiny mapping (backend shape → your SupportOrg interface)
+      const supportOrgsMapped: SupportOrg[] = (supportOrgsRaw as any).map(
+        (org: any) => ({
+          id: String(org.id),
+          name: org.name,
+          type: org.type as SupportOrg["type"],
+          location: { lat: org.latitude, lng: org.longitude },
+          address: org.address,
+          contact: org.contact,
+          email: org.email,
+          services: org.services,
+          openHours: org.open_hours,
+        })
+      );
+
+      setSupportOrgs(supportOrgsMapped);
+
+      // if you add stats state:
+      // setStats(stats);
+
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message ?? "Unknown error");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadData();
+}, []);
+
+
 
   // UI State
   type ActiveView = 'dashboard' | 'rankings' | 'jobs' | 'reviews' | 'review' | 'visualizations' | 'map' | 'companyMap' | 'companyDetail';
