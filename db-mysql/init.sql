@@ -5,6 +5,9 @@
 -- CREATE DATABASE IF NOT EXISTS korus_platform;
 -- USE korus_platform;
 
+CREATE DATABASE IF NOT EXISTS korus_platform;
+USE korus_platform;
+
 -- Companies Table
 CREATE TABLE IF NOT EXISTS companies (
     id INT AUTO_INCREMENT PRIMARY KEY,

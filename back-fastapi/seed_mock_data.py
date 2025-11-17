@@ -1,8 +1,3 @@
-"""
-Seed script for French companies data
-Migrates all mock data from frontend to database
-"""
-
 import json
 
 from auth import get_password_hash
@@ -12,9 +7,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 
-def seed_french_companies():
+def seed_mock_data():
     """Seed database with French companies and related data"""
-    print("\nSeeding French companies data...")
+    print("\nSeeding mock data...")
 
     engine = create_engine(SQLALCHEMY_DATABASE_URL)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -582,7 +577,7 @@ def seed_french_companies():
         db.commit()
         print(f"Created {len(support_orgs)} support organizations")
 
-        print("\nFrench companies data seeded successfully!")
+        print("\nMock data seeded successfully!")
         print("\nSummary:")
         print(f"   - Companies: {len(companies)}")
         print(f"   - Jobs: {len(jobs)}")
