@@ -16,7 +16,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Korus Collective VoiceAPI",
-    description="API for migrant Collective Voicewith company authentication",
+    description="API for migrant Collective Voice with company authentication",
     version="1.0.0",
 )
 
@@ -324,6 +324,36 @@ def delete_job(
 
     crud.delete_job(db=db, job_id=job_id)
     return None
+
+
+# ==================== SUPPORT ORGANIZATION ENDPOINTS ====================
+
+
+@app.get("/api/support-organizations", response_model=List[schemas.SupportOrgResponse])
+def get_all_support_organizations(
+    skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
+    """
+    Get all support organizations
+    """
+    support_orgs = crud.get_support_organizations(db, skip=skip, limit=limit)
+    return support_orgs
+
+
+@app.get(
+    "/api/support-organizations/{org_id}", response_model=schemas.SupportOrgResponse
+)
+def get_support_organization(org_id: int, db: Session = Depends(get_db)):
+    """
+    Get specific support organization by ID
+    """
+    org = crud.get_support_organization(db, org_id=org_id)
+    if org is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Support organization not found",
+        )
+    return org
 
 
 # ==================== STATISTICS ENDPOINTS ====================
