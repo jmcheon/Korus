@@ -598,4 +598,4 @@ def seed_mock_data():
 
 
 if __name__ == "__main__":
-    seed_french_companies()
+    seed_mock_data()
