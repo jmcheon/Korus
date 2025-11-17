@@ -33,6 +33,10 @@ CREATE TABLE IF NOT EXISTS companies (
     rating_pay FLOAT DEFAULT 0.0,
     rating_treatment FLOAT DEFAULT 0.0,
     rating_safety FLOAT DEFAULT 0.0,
+
+    -- Coordinates for map display
+    latitude FLOAT NULL,
+    longitude FLOAT NULL,
     
     -- Account status
     is_active BOOLEAN DEFAULT TRUE,

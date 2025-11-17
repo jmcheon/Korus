@@ -3,11 +3,8 @@ services:
     image: mysql:8.0
     container_name: korus-mysql
     restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: korus
-      MYSQL_USER: korus
-      MYSQL_PASSWORD: korus
+    env_file:
+      - ./.env.dev
     ports:
       - "3306:3306"
     volumes:
@@ -19,14 +16,8 @@ services:
       context: ./back-fastapi
     container_name: korus-backend
     restart: unless-stopped
-    environment:
-      MYSQL_USER: korus
-      MYSQL_PASSWORD: korus
-      MYSQL_HOST: db
-      MYSQL_PORT: 3306
-      MYSQL_DATABASE: korus
-      SECRET_KEY: dev-secret-key-change-in-production
-      DEBUG: "True"
+    env_file:
+      - ./.env.dev
     volumes:
       - ./back-fastapi:/code
       - uploads_data:/code/uploads

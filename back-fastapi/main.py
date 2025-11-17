@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import List
+from typing import Any, List
 
 import auth
 import crud
@@ -112,6 +112,33 @@ def get_current_company_info(
     Get current authenticated company information
     """
     return current_company
+
+
+# ==================== DASHBOARD ENDPOINTS ====================
+
+@app.get("/api/dashboard")
+def get_dashboard_data(db: Session = Depends(get_db)) -> dict[str, Any]:
+    """
+    Aggregated data for the main dashboard:
+    - companies
+    - jobs
+    - reviews
+    - support organizations
+    - platform statistics
+    """
+    companies = crud.get_companies(db, skip=0, limit=100)
+    jobs = crud.get_jobs(db, skip=0, limit=200)
+    reviews = crud.get_reviews(db, skip=0, limit=200)
+    support_orgs = crud.get_support_organizations(db, skip=0, limit=200)
+    stats = crud.get_platform_statistics(db)
+
+    return {
+        "companies": companies,
+        "jobs": jobs,
+        "reviews": reviews,
+        "support_organizations": support_orgs,
+        "statistics": stats,
+    }
 
 
 # ==================== COMPANY ENDPOINTS ====================
