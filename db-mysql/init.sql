@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS companies (
     total_reviews INT DEFAULT 0,
     social_media_score FLOAT DEFAULT 0.0,
     trust_score FLOAT DEFAULT 0.0,
+    external_platform_score FLOAT DEFAULT 0.0,
     verified BOOLEAN DEFAULT FALSE,
     
     -- Rating breakdown

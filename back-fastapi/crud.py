@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-from sqlalchemy import func
-from sqlalchemy.orm import Session
-
 import auth
 import models
 import schemas
+from sqlalchemy import func
+from sqlalchemy.orm import Session
 
 # ==================== COMPANY CRUD ====================
 
@@ -261,6 +260,33 @@ def delete_job(db: Session, job_id: int):
     if db_job:
         db.delete(db_job)
         db.commit()
+
+
+# ==================== SUPPORT ORGANIZATION CRUD ====================
+
+
+def get_support_organization(
+    db: Session, org_id: int
+) -> Optional[models.SupportOrganization]:
+    """Get support organization by ID"""
+    return (
+        db.query(models.SupportOrganization)
+        .filter(models.SupportOrganization.id == org_id)
+        .first()
+    )
+
+
+def get_support_organizations(
+    db: Session, skip: int = 0, limit: int = 100
+) -> List[models.SupportOrganization]:
+    """Get all support organizations"""
+    return (
+        db.query(models.SupportOrganization)
+        .filter(models.SupportOrganization.is_active == True)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
 # ==================== STATISTICS ====================
