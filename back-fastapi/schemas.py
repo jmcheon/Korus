@@ -58,11 +58,14 @@ class CompanyResponse(CompanyBase):
     total_reviews: int
     social_media_score: float
     trust_score: float
+    external_platform_score: float
     verified: bool
     rating_work_conditions: float
     rating_pay: float
     rating_treatment: float
     rating_safety: float
+    latitude: Optional[float]
+    longitude: Optional[float]
     is_active: bool
     created_at: datetime
     updated_at: Optional[datetime]
@@ -85,11 +88,14 @@ class CompanyPublic(BaseModel):
     total_reviews: int
     social_media_score: float
     trust_score: float
+    external_platform_score: float
     verified: bool
     rating_work_conditions: float
     rating_pay: float
     rating_treatment: float
     rating_safety: float
+    latitude: Optional[float]
+    longitude: Optional[float]
 
     class Config:
         from_attributes = True

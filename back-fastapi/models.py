@@ -39,6 +39,7 @@ class Company(Base):
     total_reviews = Column(Integer, default=0)
     social_media_score = Column(Float, default=0.0)
     trust_score = Column(Float, default=0.0)
+    external_platform_score = Column(Float, default=0.0)  # NEW: Glassdoor/Indeed score
     verified = Column(Boolean, default=False)
 
     # Rating breakdown
@@ -46,6 +47,10 @@ class Company(Base):
     rating_pay = Column(Float, default=0.0)
     rating_treatment = Column(Float, default=0.0)
     rating_safety = Column(Float, default=0.0)
+
+    # Coordinates for map display
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
 
     # Account status
     is_active = Column(Boolean, default=True)
