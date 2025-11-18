@@ -23,6 +23,7 @@ import {
 } from './ui/select';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Star, MapPin, Shield, AlertTriangle, TrendingUp, Users, Building2, Heart, Phone, Mail, Clock, Filter, Download, Search, Menu, X, Map as MapIcon } from 'lucide-react';
+import { useRouter } from "next/navigation";
 
 // Dynamic import for Leaflet to avoid SSR issues
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
@@ -233,22 +234,22 @@ function mapSupportOrgFromApi(api: ApiSupportOrg): SupportOrg {
   };
 }
 
-export default function MigrantWorkerPlatform() {
+export default function KorusPlatform() {
   // Authentication State
   const [userRole, setUserRole] = useState<UserRole>(null);
   const [employeeToken, setEmployeeToken] = useState('');
   const [companyEmail, setCompanyEmail] = useState('');
   const [companyPassword, setCompanyPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
 
   // Data State
-// Data State
-const [companies, setCompanies] = useState<Company[]>([]);
-const [jobs, setJobs] = useState<Job[]>([]);
-const [reviews, setReviews] = useState<Review[]>([]);
-const [supportOrgs, setSupportOrgs] = useState<SupportOrg[]>([]);
-const [isLoading, setIsLoading] = useState(true);
-const [error, setError] = useState<string | null>(null);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [supportOrgs, setSupportOrgs] = useState<SupportOrg[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
 useEffect(() => {
   const loadData = async () => {
@@ -434,6 +435,8 @@ useEffect(() => {
     if (employeeToken.length >= 8) {
       setUserRole('employee');
       setIsAuthenticated(true);
+
+      // router.push("/leave-review");
     }
   };
 

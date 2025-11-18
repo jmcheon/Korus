@@ -1,3 +1,3 @@
-import MigrantWorkerPlatform from '@/components/MigrantWorkerPlatform';
+import KorusPlatform from '@/components/platform';
 
-export default function Home() { return <MigrantWorkerPlatform />; }
+export default function Home() { return <KorusPlatform />; }
