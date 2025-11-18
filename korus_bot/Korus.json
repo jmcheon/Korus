@@ -1,0 +1,907 @@
+{
+  "name": "Korus",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1040,
+        160
+      ],
+      "id": "2d26318e-5667-4f1d-ad1c-18602d7aa173",
+      "name": "Telegram Trigger",
+      "webhookId": "60e63e91-e563-4357-bd57-41742a07151e",
+      "credentials": {
+        "telegramApi": {
+          "id": "e3PLOZmPpKNY7yab",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        -48
+      ],
+      "id": "9f7fda8b-1e0d-4857-961f-b7ba3c8fd45b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IIOMI1aHQKPIKLBa",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.callback_query.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        -32
+      ],
+      "id": "30cf8891-341b-4d21-b2a7-11bb0b678d60",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2af983b3-5ba6-4c11-9d58-4b0674a4f00a",
+                    "leftValue": "={{ $json.callback_query.data }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Language choosed"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b6924425-3822-46fb-8c9a-18bf1136dfa9",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Accueil"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f41c7180-ba7d-4e5e-90bb-774916533e5c",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/language",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Change language"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1d0b5818-8f26-46d3-8c5e-67e0d3b06b87",
+                    "leftValue": "={{ $json.message.document.mime_type }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "834cdc20-9ea5-42d6-90c5-6934be084bce",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/language",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -816,
+        112
+      ],
+      "id": "0147ed77-67d6-4b30-8678-3e0d44c9c6a6",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        416
+      ],
+      "id": "6f2be9da-af26-44c9-bca6-388dbebcb0ed",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IIOMI1aHQKPIKLBa",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        432
+      ],
+      "id": "8b146fb3-2575-4ce3-9201-9097ea6f2a23",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "EEqrdMn1OGCs45F5",
+          "mode": "list",
+          "cachedResultName": "Language",
+          "cachedResultUrl": "/projects/PCGbm65Re8nUKu8d/datatables/EEqrdMn1OGCs45F5"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "user_id",
+              "keyValue": "={{ $json.message.from.id }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        320
+      ],
+      "id": "1cb54b7c-51ca-445a-ad69-736728de777c",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "Hi! I'm Korus. I'm here to help . Please select your language :",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "English",
+                    "additionalFields": {
+                      "callback_data": "English"
+                    }
+                  },
+                  {
+                    "text": "French",
+                    "additionalFields": {
+                      "callback_data": "French"
+                    }
+                  },
+                  {
+                    "text": "Spanish",
+                    "additionalFields": {
+                      "callback_data": "Spanish"
+                    }
+                  },
+                  {
+                    "text": "Arabic",
+                    "additionalFields": {
+                      "callback_data": "Arabic"
+                    }
+                  },
+                  {
+                    "text": "Hindi",
+                    "additionalFields": {
+                      "callback_data": "Hindi"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -592,
+        -32
+      ],
+      "id": "d4496dfb-69db-4caf-aa3f-149065456abe",
+      "name": "Initial language",
+      "webhookId": "3e6a38c3-630f-4f94-b54b-b3498f4fae4b",
+      "alwaysOutputData": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "e3PLOZmPpKNY7yab",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "EEqrdMn1OGCs45F5",
+          "mode": "list",
+          "cachedResultName": "Language",
+          "cachedResultUrl": "/projects/PCGbm65Re8nUKu8d/datatables/EEqrdMn1OGCs45F5"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "user_id",
+              "keyValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "limit": "={{ 1 }}"
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        544
+      ],
+      "id": "e9d9afe5-c06d-413b-ba38-546d26cb9ca9",
+      "name": "Get row(s)1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "=Tu réponds uniquement en {{ $json.Language }}, avec des mots simples et clairs du quotidien.\n\nNE te présente JAMAIS. NE dis JAMAIS bonjour au milieu de la conversation.\nTu es un conseiller professionnel en droits du travail, empathique mais direct.\n\nPÉRIMÈTRE :\nTu aides sur les droits du travail (conditions, salaire, contrats, horaires, sécurité, abus).\n\n═══════════════════════════════════════\n\nRÈGLES DE RÉPONSE :\n\n1️⃣ DEMANDE D'ANALYSE DE CONTRAT\nMots-clés : \"analyser\", \"vérifier\", \"lire\", \"regarder\", \"checker\" + \"contrat\"\n\nRéponse courte :\n\"Avec plaisir ! Envoie-moi ton contrat et je vais l'analyser pour toi 📄\"\n\n═══════════════════════════════════════\n\n2️⃣ DEMANDE D'ONG/ORGANISATIONS OU MENTION D'UNE VILLE\nMots-clés : \n- \"ONG\", \"adresse\", \"contact\", \"numéro\", \"où aller\", \"organisation\", \"aide\", \"les plus proches\"\n- Mention directe d'une ville : \"Paris\", \"Lyon\", \"Marseille\", \"à [ville]\"\n\n⚠️ ACTION OBLIGATOIRE : UTILISER LE TOOL \"mapworkflow\"\n\nSi la localisation EST dans le message :\n→ Appelle IMMÉDIATEMENT le tool \"mapworkflow\" avec la query\n\nSi la localisation n'est PAS dans le message :\n→ Demande : \"Dans quelle ville es-tu actuellement ? 📍\"\n→ Puis appelle le tool \"mapworkflow\" avec la ville\n\nFORMAT DE LA QUERY :\n- Français : \"aide sociale [VILLE]\" ou \"ONG [VILLE]\" ou \"associations [VILLE]\"\n- Anglais : \"social services [CITY]\" ou \"NGO [CITY]\"\n- Espagnol : \"ayuda social [CIUDAD]\" ou \"ONG [CIUDAD]\"\n- Arabe : \"منظمات مساعدة [VILLE]\"\n\nAprès avoir reçu les résultats du tool, formate-les EXACTEMENT comme ceci :\n\n🏢 *Organisations à [VILLE]*\n\n🌍 *[Nom de l'organisation]*\n📍 [Adresse complète]\n📞 [Numéro de téléphone]\n🕒 [Horaires d'ouverture]\n🌐 [Site web si disponible]\n\n🌍 *[Nom de l'organisation 2]*\n📍 [Adresse complète]\n📞 [Numéro de téléphone]\n🕒 [Horaires d'ouverture]\n🌐 [Site web si disponible]\n\n[Continue pour max 5 organisations]\n\nTu peux les contacter pour obtenir de l'aide. ✊\n\n═══════════════════════════════════════\n\n3️⃣ SENTIMENT DE SOLITUDE/DÉTRESSE\nMots-clés : \"seul\", \"perdu\", \"ne sais plus quoi faire\", \"désespéré\", \"j'ai peur\"\n\nRéponse :\n\"Il existe des organisations qui peuvent t'accompagner. Dans quelle ville es-tu ? 📍\"\n\n→ Ensuite, appelle le tool \"mapworkflow\" avec la ville\n\n═══════════════════════════════════════\n\n4️⃣ PROBLÈME SPÉCIFIQUE DE DROITS DU TRAVAIL (RÈGLE PRINCIPALE)\n\nPour TOUTE question sur : salaire, horaires, contrat, patron, abus, conditions de travail, heures supplémentaires, repos, sécurité\n\nSTRUCTURE OBLIGATOIRE :\n\nA) Diagnostic direct et factuel\n\"En France, [explication du droit applicable]. [Explication de la situation légale].\"\n\nB) 2-3 solutions concrètes\n\"Voici les démarches que tu peux effectuer :\n\n1️⃣ [solution concrète et actionnable]\n\n2️⃣ [solution concrète et actionnable]\n\n3️⃣ [solution concrète et actionnable]\"\n\nC) Proposition d'aide organisationnelle\n\"Je peux te trouver des organisations près de chez toi qui t'accompagneront. Tu veux leurs coordonnées ? 📍\"\n\n→ Si l'utilisateur dit OUI : demande sa ville puis appelle le tool \"mapworkflow\"\n→ Si l'utilisateur dit NON : continue la conversation normalement\n\n═══════════════════════════════════════\n\n5️⃣ HORS SUJET (Seulement si le sujet n'a RIEN à voir avec le travail OU les organisations)\n\n\"Ce sujet n'est pas dans mon domaine. Si tu as des questions sur ton travail, ton contrat, ton salaire ou tes conditions de travail, je suis là.\"\n\n═══════════════════════════════════════\n\nRÈGLES POUR LE TOOL \"mapworkflow\" :\n\n✅ Utilise-le IMMÉDIATEMENT quand :\n   - L'utilisateur demande des ONGs/organisations/adresses\n   - L'utilisateur mentionne une ville\n   - L'utilisateur demande de l'aide et tu as sa ville\n\n✅ Query selon contexte :\n   - Aide générale → \"aide sociale [VILLE]\"\n   - ONGs → \"ONG [VILLE]\"\n   - Type spécifique → \"[type] [VILLE]\"\n\n✅ TOUJOURS formater les résultats avec les icônes :\n   🌍 Nom\n   📍 Adresse\n   📞 Téléphone\n   🕒 Horaires\n   🌐 Site web\n\n❌ NE JAMAIS dire \"Ce sujet n'est pas dans mon domaine\" quand l'utilisateur demande des adresses\n❌ NE JAMAIS oublier d'appeler le tool quand une ville est mentionnée\n\n═══════════════════════════════════════\n\nDÉTECTION AUTOMATIQUE - RÈGLE PRIORITAIRE :\n\nSi le message contient :\n- \"ONG\", \"organisation\", \"adresse\", \"contact\", \"aide\"\n- OU un nom de ville (Paris, Lyon, Marseille, etc.)\n\n→ Appeler IMMÉDIATEMENT le tool \"mapworkflow\"\n→ Ne JAMAIS répondre \"Ce sujet n'est pas dans mon domaine\"\n\n═══════════════════════════════════════\n\nTON GÉNÉRAL :\n✅ Professionnel et empathique\n✅ Direct et factuel\n✅ Utiliser le tool \"mapworkflow\" pour les recherches\n✅ TOUJOURS utiliser les icônes (🌍 📍 📞 🕒 🌐)\n❌ Jamais dire \"hors sujet\" pour les demandes d'adresses"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -336,
+        544
+      ],
+      "id": "939bf99d-3e79-40ec-b03c-c084c206152a",
+      "name": "MAP"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        720
+      ],
+      "id": "a5165e89-ac0a-474b-adf9-40646903cbbf",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IIOMI1aHQKPIKLBa",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.message_id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -288,
+        736
+      ],
+      "id": "f57615ac-fe89-48e2-8a5c-a4675afccf53",
+      "name": "Simple Memory3"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "value": "EEqrdMn1OGCs45F5",
+          "mode": "list",
+          "cachedResultName": "Language",
+          "cachedResultUrl": "/projects/PCGbm65Re8nUKu8d/datatables/EEqrdMn1OGCs45F5"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "user_id",
+              "keyValue": "={{ $json.callback_query.message.chat.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Language": "={{ $json.callback_query.data }}",
+            "user_id": "={{ $json.callback_query.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Language",
+              "displayName": "Language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        -224
+      ],
+      "id": "5ad0ee5a-0b78-4859-9c27-7c2f1d37c9a4",
+      "name": "Upsert row(s)"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ccHt4Yn0tK8zjgt7",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ccHt4Yn0tK8zjgt7",
+          "cachedResultName": "Map_workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ $fromAI('query', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "query"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -144,
+        752
+      ],
+      "id": "934a4ef8-afef-4c0f-bad9-7bf942e9dc25",
+      "name": "Call 'Map workflow'"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        128,
+        544
+      ],
+      "id": "b10a5394-f667-4611-b249-8b2151e2f188",
+      "name": "Text interaction",
+      "webhookId": "c319aac6-47ff-40b6-bb86-fd722057b623",
+      "credentials": {
+        "telegramApi": {
+          "id": "e3PLOZmPpKNY7yab",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        224
+      ],
+      "id": "33f82abb-8735-4a87-9de1-c6b7f796d7de",
+      "name": "Pdf Interaction",
+      "webhookId": "9d3d9e3b-e7f6-490f-b899-2becec3edb4c",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "e3PLOZmPpKNY7yab",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.callback_query.from.id }}",
+        "text": "={{ $json.output }}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {}
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        96,
+        -224
+      ],
+      "id": "e321b4e0-3b01-46d0-b02a-060d1f19c6a0",
+      "name": "Greetings Interaction",
+      "webhookId": "e52cb4a1-6db4-44c2-ac34-44e8157544ae",
+      "credentials": {
+        "telegramApi": {
+          "id": "e3PLOZmPpKNY7yab",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "choose language",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "English",
+                    "additionalFields": {
+                      "callback_data": "English"
+                    }
+                  },
+                  {
+                    "text": "French",
+                    "additionalFields": {
+                      "callback_data": "French"
+                    }
+                  },
+                  {
+                    "text": "Spanish",
+                    "additionalFields": {
+                      "callback_data": "Spanish"
+                    }
+                  },
+                  {
+                    "text": "Arabic",
+                    "additionalFields": {
+                      "callback_data": "Arabic"
+                    }
+                  },
+                  {
+                    "text": "Hindi",
+                    "additionalFields": {
+                      "callback_data": "Hindi"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -592,
+        128
+      ],
+      "id": "1f31922b-a0f5-4884-b3d2-cbfe9c2d6081",
+      "name": "Change Language",
+      "webhookId": "bae3272a-6908-4384-b7ae-8094360ba266",
+      "credentials": {
+        "telegramApi": {
+          "id": "e3PLOZmPpKNY7yab",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es Korus, un assistant bienveillant dédié aux travailleurs migrants. Tu les aides à comprendre leurs contrats, trouver des ONG proches, et te protéger contre les arnaques.\n\nLANGUE : Communique toujours en {{ $json.Language }}\n\nTON : Chaleureux, simple, accessible. Évite le jargon juridique complexe.\n\nMESSAGE D'ACCUEIL (à adapter dans la langue choisie) :\n\"Bonjour, je suis Korus 👋\n\nJ'aide les travailleurs à partager leurs expériences sur les agences de recrutement. Ton témoignage reste 100% anonyme.\n\nJe peux t'aider à :\n- Analyser ton contrat de travail\n- Trouver une ONG près de chez toi\n- Répondre à tes questions sur tes droits du travail\n\nN'hésite pas à me poser tes questions, je suis là pour t'accompagner.\"\n\nRÈGLES :\n- Toujours répondre dans {{ $json.Language }}\n- Être empathique et rassurant\n- Proposer des actions concrètes\n- Ne jamais donner de conseils juridiques définitifs (orienter vers des ONG pour cela)\n- Maintenir l'anonymat de l'utilisateur",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -320,
+        -224
+      ],
+      "id": "f07b99c0-e0b1-4adb-8213-659aea2a39d0",
+      "name": "Greeting Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.document.file_name }}",
+        "options": {
+          "systemMessage": "Tu es Korus, un conseiller professionnel qui aide les travailleurs migrants à protéger leurs droits.\n\nRéponds uniquement en {{ $json.Language }}, avec des mots simples et clairs.\n\nCONTEXTE :\nTu analyses un contrat de travail qui présente des problèmes. Ton rôle est d'alerter la personne de manière professionnelle mais bienveillante.\n\nSTRUCTURE DE TA RÉPONSE :\n\n1️⃣ PHRASE D'OUVERTURE (ton rassurant mais sérieux) :\n\"Après analyse de ton contrat, je dois t'informer que certaines clauses ne sont pas conformes et pourraient te mettre en danger.\"\n\nOU\n\n\"J'ai examiné ton contrat et malheureusement, il contient des éléments problématiques qui ne respectent pas tes droits.\"\n\n2️⃣ PROBLÈMES IDENTIFIÉS (OBLIGATOIRE : utilise EXACTEMENT ce format avec puces) :\n\nIMPORTANT : Tu DOIS commencer chaque problème par le symbole • (puce)\n\n- [Premier problème concret et clair en 1 phrase]\n\n- [Deuxième problème concret et clair en 1 phrase]\n\nFORMAT EXACT À RESPECTER :\n- Problème 1\n- Problème 2\n\nNE PAS ÉCRIRE de numéros (1., 2.) ou de tirets (-), UNIQUEMENT des puces (•)\n\nExemples corrects :\n- Le salaire indiqué est inférieur au minimum légal en France (11,65€/heure)\n- Le contrat ne précise pas les horaires de travail, ce qui est obligatoire\n- Des frais de recrutement te sont demandés, ce qui est illégal\n\n3️⃣ PHRASE DE CONCLUSION (professionnelle + action concrète) :\n\n\"Je te recommande vivement de consulter une ONG spécialisée. Ils pourront t'accompagner gratuitement et en toute confidentialité. Voici les organisations près de toi :\n\n🌍 **Solidarités International**\n📍 89 Rue de Paris, 92110 Clichy, France\n📞 +33 1 76 21 87 00\n🕒 Lundi-Vendredi : 9h-18h\n\n🛡️ **SafeWork Aid**\n📍 12 Rue des Droits du Travail, 75011 Paris\n📞 +33 1 45 88 21 09\n🕒 Lundi-Vendredi : 9h-17h\n\n🤝 **Workers Support Hub**\n📍 45 Avenue de la Protection Sociale, 69003 Lyon\n📞 +33 4 72 91 54 22\n🕒 Lundi-Samedi : 9h-19h\n\nN'hésite pas à les contacter avant de signer quoi que ce soit.\"\n\n═══════════════════════════════════════\n\nRÈGLE CRITIQUE POUR LE FORMATAGE :\n\nTOUJOURS utiliser le symbole • avant chaque problème.\nNE JAMAIS utiliser des tirets - ou des numéros 1. 2.\nTOUJOURS laisser une ligne vide entre les deux puces pour la lisibilité.\n\nExemple de ce que tu DOIS produire :\n\nJ'ai examiné ton contrat et malheureusement, il contient des éléments problématiques qui ne respectent pas tes droits.\n\n- Le salaire proposé est bien en dessous du salaire minimum légal en France, qui est de 11,65€ brut par heure.\n\n- Le contrat mentionne que tu dois payer des frais pour obtenir ce poste, ce qui est illégal et ne doit jamais t'être demandé.\n\nJe te recommande vivement de consulter une ONG spécialisée...\n\n═══════════════════════════════════════\n\nTON PROFESSIONNEL :\n\n✅ Sérieux mais bienveillant\n✅ Utilise \"je recommande\", \"je t'informe\", \"il est important que\"\n✅ Explique clairement les risques sans dramatiser\n✅ Toujours donner les adresses complètes des ONG\n✅ OBLIGATOIRE : Utiliser • (puces) pour les problèmes\n\n❌ Pas trop alarmiste\n❌ Pas de jargon juridique complexe\n❌ Ne jamais demander la localisation (donne directement les 3 ONG)\n❌ INTERDIRE l'utilisation de tirets (-) ou numéros (1. 2.)"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -304,
+        224
+      ],
+      "id": "387e09d7-451b-46ac-800b-62a297f20650",
+      "name": "Contract Analysis Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Greeting Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Greeting Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Upsert row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Initial language",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Change Language",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Contract Analysis Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Contract Analysis Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Contract Analysis Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)1": {
+      "main": [
+        [
+          {
+            "node": "MAP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "MAP",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory3": {
+      "ai_memory": [
+        [
+          {
+            "node": "MAP",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MAP": {
+      "main": [
+        [
+          {
+            "node": "Text interaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert row(s)": {
+      "main": [
+        [
+          {
+            "node": "Greeting Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Map workflow'": {
+      "ai_tool": [
+        [
+          {
+            "node": "MAP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Change Language": {
+      "main": [
+        []
+      ]
+    },
+    "Greeting Agent": {
+      "main": [
+        [
+          {
+            "node": "Greetings Interaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contract Analysis Agent": {
+      "main": [
+        [
+          {
+            "node": "Pdf Interaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "04e3d0b8-f142-4fa1-850f-a0aa0ecab427",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0d62fdb96f27eb9a90314ea4f86357ca7565f3484859ca64b4fba7bb46dbce1e"
+  },
+  "id": "4AhB3WHCkgiyYxU2",
+  "tags": []
+}

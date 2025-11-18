@@ -1,0 +1,148 @@
+{
+  "name": "Map_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a21c5483-4a17-4600-9dac-08cf307b6225",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        1200
+      ],
+      "id": "a16c5ece-5bc1-4078-87d9-dc47ef3f8fad",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $json.places.map(place => ({\n  Position: place.position,\n  Name: place.name,\n  Address: place.address,\n  Hours: place.hours,\n  Rating: place.rating,\n  Website: place.website,\n  Phone: place.phoneNumber,\n  \"Number of Avis\": place.ratingCount\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        1200
+      ],
+      "id": "eabcb4db-3d4b-454b-a737-52d5f5a562de",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://google.serper.dev/maps",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "5bcf0b9704e84ba07869e0464b3d3f7afd41f121"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"q\" : \"{{ $json.query }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        544,
+        1200
+      ],
+      "id": "60cfbc93-9542-4b95-a0bf-0360587d2b31",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        1200
+      ],
+      "id": "518bb015-3eca-4b82-b0ab-a6d95a88f96b",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "96eb5b08-a0d2-4197-a339-917ff862fd66",
+  "meta": {
+    "instanceId": "0d62fdb96f27eb9a90314ea4f86357ca7565f3484859ca64b4fba7bb46dbce1e"
+  },
+  "id": "ccHt4Yn0tK8zjgt7",
+  "tags": []
+}
