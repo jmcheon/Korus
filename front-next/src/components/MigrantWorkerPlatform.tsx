@@ -1337,7 +1337,7 @@ useEffect(() => {
                             className="w-full"
                             onClick={() => {
                               setSelectedCompany(company || null);
-                              setActiveView('rankings');
+                              setActiveView('companyDetail');
                             }}
                           >
                             View Company
