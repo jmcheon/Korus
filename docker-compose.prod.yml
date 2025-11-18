@@ -25,6 +25,8 @@ services:
     build:
       context: ./front-next
       target: production
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: korus-frontend
     restart: unless-stopped
     env_file:
