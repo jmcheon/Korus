@@ -5,6 +5,13 @@ A platform empowering migrant workers to anonymously share reviews about their w
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-1abc9c?style=for-the-badge)](http://51.21.248.96/)
 
 
+## 📱 Korus Chatbot Entry Point (QR Code)
+Korus starts with a conversational assistant that allows migrant workers to submit feedback privately and safely.
+
+👉 [**Korus Chatbot README**](https://github.com/jmcheon/Korus/blob/main/korus_bot/Readme.md)
+
+---
+
 ## Features
 
 - 📝 Leave anonymous reviews about employers
