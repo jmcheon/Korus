@@ -69,7 +69,7 @@ Both development and production use Docker Compose with isolated services:
 
 ## Future Roadmap
 
-- Multi-language support (French, English, Arabic)
+- Multi-language support (French, Spanish, Arabic)
 
 - AI-based review classification (positive/neutral/negative)
 
