@@ -1,5 +1,7 @@
 .env.dev
 .env.front.dev
+.env.prod
+.env.front.prod
 # Node / Next.js
 # Docker build caches and volumes
 **/__pycache__/
